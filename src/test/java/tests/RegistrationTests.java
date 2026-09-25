@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import testdata.BaseTestData;
 import testdata.RegistrationTestData;
 
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static specs.registration.RegistrationSpec.*;
@@ -24,7 +25,7 @@ public class RegistrationTests extends TestBase {
     public void successfulRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
-        SuccessfulRegistrationResponseModel registrationResponse = given()
+        SuccessfulRegistrationResponseModel registrationResponse = step("Регистрация нового пользвотеля и проверка ответа 201", () -> given()
                 .spec(registrationRequestSpec)
                 .body(registrationData)
                 .when()
@@ -32,7 +33,7 @@ public class RegistrationTests extends TestBase {
                 .then()
                 .spec(successfulRegistrationResponseSpec)
                 .extract()
-                .as(SuccessfulRegistrationResponseModel.class);
+                .as(SuccessfulRegistrationResponseModel.class));
 
         assertThat(registrationResponse.id()).isGreaterThan(0);
         assertThat(registrationResponse.username()).isEqualTo(testData.username);
@@ -48,7 +49,7 @@ public class RegistrationTests extends TestBase {
     public void existingUserWrongRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
-        SuccessfulRegistrationResponseModel firstRegistrationResponse = given()
+        SuccessfulRegistrationResponseModel firstRegistrationResponse = step("Регистрация нового пользвотеля и проверка ответа 201", () -> given()
                 .spec(registrationRequestSpec)
                 .body(registrationData)
                 .when()
@@ -56,11 +57,11 @@ public class RegistrationTests extends TestBase {
                 .then()
                 .spec(successfulRegistrationResponseSpec)
                 .extract()
-                .as(SuccessfulRegistrationResponseModel.class);
+                .as(SuccessfulRegistrationResponseModel.class));
 
         assertThat(firstRegistrationResponse.username()).isEqualTo(testData.username);
 
-        ExistingUserResponseModel secondRegistrationResponse = given()
+        ExistingUserResponseModel secondRegistrationResponse = step("Регистрация пользвотеля повторно и проверка ответа 400", () -> given()
                 .spec(registrationRequestSpec)
                 .body(registrationData)
                 .when()
@@ -68,7 +69,7 @@ public class RegistrationTests extends TestBase {
                 .then()
                 .spec(existingUserRegistrationResponseSpec)
                 .extract()
-                .as(ExistingUserResponseModel.class);
+                .as(ExistingUserResponseModel.class));
 
 
         String actualError = secondRegistrationResponse.username().get(0);
@@ -77,9 +78,9 @@ public class RegistrationTests extends TestBase {
 
     @Test
     public void registrationWithBlankFieldsTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel("","");
+        RegistrationBodyModel registrationData = new RegistrationBodyModel("", "");
 
-        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = given()
+        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = step("Регистрация пользвотеля с пустыми полями в теле запроса и проверка ответа 400", () -> given()
                 .spec(registrationRequestSpec)
                 .body(registrationData)
                 .when()
@@ -87,7 +88,7 @@ public class RegistrationTests extends TestBase {
                 .then()
                 .spec(blankFieldsRegistrationResponseSpec)
                 .extract()
-                .as(RegistrationWithoutOrBlankFieldsResponseModel.class);
+                .as(RegistrationWithoutOrBlankFieldsResponseModel.class));
 
         String usernameActualDetailError = secondRegistrationResponse.username().get(0);
         String passwordActualDetailError = secondRegistrationResponse.username().get(0);
@@ -96,10 +97,11 @@ public class RegistrationTests extends TestBase {
         assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
 
     }
+
     @Test
     public void registrationWithoutFieldsTest() {
 
-        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = given()
+        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = step("Регистрация пользвотеля с пустым телом запроса и проверка ответа 400", () -> given()
                 .spec(registrationRequestSpec)
                 .body("{}")
                 .when()
@@ -107,7 +109,7 @@ public class RegistrationTests extends TestBase {
                 .then()
                 .spec(blankFieldsRegistrationResponseSpec)
                 .extract()
-                .as(RegistrationWithoutOrBlankFieldsResponseModel.class);
+                .as(RegistrationWithoutOrBlankFieldsResponseModel.class));
 
         String usernameActualDetailError = secondRegistrationResponse.username().get(0);
         String passwordActualDetailError = secondRegistrationResponse.username().get(0);

@@ -6,6 +6,7 @@ import models.logout.LogoutWithoutOrBlankTokenResponseModel;
 import org.junit.jupiter.api.Test;
 import testdata.BaseTestData;
 
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static specs.login.LoginSpec.loginRequestSpec;
@@ -19,36 +20,39 @@ public class LogoutTests extends TestBase {
     public void successfulLogoutTest() {
         LoginBodyModel loginData = new LoginBodyModel(BaseTestData.username, BaseTestData.password);
 
-        String refreshToken = given(loginRequestSpec)
-                .body(loginData)
-                .when()
-                .post("/auth/token/")
-                .then()
-                .spec(successfulLoginResponseSpec)
-                .extract().path("refresh");
+        String refreshToken = step("Авторизация и получение токена", () ->
+                given(loginRequestSpec)
+                        .body(loginData)
+                        .when()
+                        .post("/auth/token/")
+                        .then()
+                        .spec(successfulLoginResponseSpec)
+                        .extract().path("refresh"));
 
         LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
 
-        given(logoutRequestSpec)
-                .body(logoutData)
-                .when()
-                .post("/auth/logout/")
-                .then()
-                .spec(successfulLogoutResponseSpec);
+        step("Отправка запроса logout с refresh-токеном и проверка ответа 200", () ->
+                given(logoutRequestSpec)
+                        .body(logoutData)
+                        .when()
+                        .post("/auth/logout/")
+                        .then()
+                        .spec(successfulLogoutResponseSpec));
     }
 
     @Test
     public void logoutWithBlankToken() {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
 
-        LogoutWithoutOrBlankTokenResponseModel registrationResponse = given()
+        LogoutWithoutOrBlankTokenResponseModel registrationResponse = step("Отправка запроса logout с пустым " +
+                "refresh-токеном и проверка ответа 400", () -> given()
                 .spec(logoutRequestSpec)
                 .body(logoutData)
                 .when()
                 .post("/auth/logout/")
                 .then()
                 .spec(logoutWithBlankTokenResponseSpec).extract()
-                .as(LogoutWithoutOrBlankTokenResponseModel.class);
+                .as(LogoutWithoutOrBlankTokenResponseModel.class));
 
         String tokenActualDetailError = registrationResponse.refresh().get(0);
 
@@ -58,14 +62,15 @@ public class LogoutTests extends TestBase {
     @Test
     public void logoutWithoutToken() {
 
-        LogoutWithoutOrBlankTokenResponseModel registrationResponse = given()
+        LogoutWithoutOrBlankTokenResponseModel registrationResponse = step("Отправка запроса logout без " +
+                "refresh-токена и проверка ответа 400", () -> given()
                 .spec(logoutRequestSpec)
                 .body("{}")
                 .when()
                 .post("/auth/logout/")
                 .then()
                 .spec(logoutWithBlankTokenResponseSpec).extract()
-                .as(LogoutWithoutOrBlankTokenResponseModel.class);
+                .as(LogoutWithoutOrBlankTokenResponseModel.class));
 
         String tokenActualDetailError = registrationResponse.refresh().get(0);
 
