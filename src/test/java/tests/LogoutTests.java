@@ -54,9 +54,11 @@ public class LogoutTests extends TestBase {
                 .spec(logoutWithBlankTokenResponseSpec).extract()
                 .as(LogoutWithoutOrBlankTokenResponseModel.class));
 
-        String tokenActualDetailError = registrationResponse.refresh().get(0);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String tokenActualDetailError = registrationResponse.refresh().get(0);
 
-        assertThat(tokenActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+            assertThat(tokenActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+        });
     }
 
     @Test
@@ -72,9 +74,11 @@ public class LogoutTests extends TestBase {
                 .spec(logoutWithBlankTokenResponseSpec).extract()
                 .as(LogoutWithoutOrBlankTokenResponseModel.class));
 
-        String tokenActualDetailError = registrationResponse.refresh().get(0);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String tokenActualDetailError = registrationResponse.refresh().get(0);
 
-        assertThat(tokenActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
+            assertThat(tokenActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
+        });
     }
 
 }

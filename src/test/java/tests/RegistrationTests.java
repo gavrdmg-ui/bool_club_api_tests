@@ -35,14 +35,14 @@ public class RegistrationTests extends TestBase {
                 .extract()
                 .as(SuccessfulRegistrationResponseModel.class));
 
-        assertThat(registrationResponse.id()).isGreaterThan(0);
-        assertThat(registrationResponse.username()).isEqualTo(testData.username);
-        assertThat(registrationResponse.firstName()).isEqualTo("");
-        assertThat(registrationResponse.lastName()).isEqualTo("");
-        assertThat(registrationResponse.email()).isEqualTo("");
-
-
-        assertThat(registrationResponse.remoteAddr()).matches(BaseTestData.ipAddrRegexp);
+        step("Проверка данных пользователя после успешной регистарции", () -> {
+            assertThat(registrationResponse.id()).isGreaterThan(0);
+            assertThat(registrationResponse.username()).isEqualTo(testData.username);
+            assertThat(registrationResponse.firstName()).isEqualTo("");
+            assertThat(registrationResponse.lastName()).isEqualTo("");
+            assertThat(registrationResponse.email()).isEqualTo("");
+            assertThat(registrationResponse.remoteAddr()).matches(BaseTestData.ipAddrRegexp);
+        });
     }
 
     @Test
@@ -71,9 +71,10 @@ public class RegistrationTests extends TestBase {
                 .extract()
                 .as(ExistingUserResponseModel.class));
 
-
-        String actualError = secondRegistrationResponse.username().get(0);
-        assertThat(actualError).isEqualTo(RegistrationTestData.expectedExistUserError);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String actualError = secondRegistrationResponse.username().get(0);
+            assertThat(actualError).isEqualTo(RegistrationTestData.expectedExistUserError);
+        });
     }
 
     @Test
@@ -90,11 +91,13 @@ public class RegistrationTests extends TestBase {
                 .extract()
                 .as(RegistrationWithoutOrBlankFieldsResponseModel.class));
 
-        String usernameActualDetailError = secondRegistrationResponse.username().get(0);
-        String passwordActualDetailError = secondRegistrationResponse.username().get(0);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String usernameActualDetailError = secondRegistrationResponse.username().get(0);
+            String passwordActualDetailError = secondRegistrationResponse.username().get(0);
 
-        assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
-        assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+            assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+            assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+        });
 
     }
 
@@ -111,12 +114,13 @@ public class RegistrationTests extends TestBase {
                 .extract()
                 .as(RegistrationWithoutOrBlankFieldsResponseModel.class));
 
-        String usernameActualDetailError = secondRegistrationResponse.username().get(0);
-        String passwordActualDetailError = secondRegistrationResponse.username().get(0);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String usernameActualDetailError = secondRegistrationResponse.username().get(0);
+            String passwordActualDetailError = secondRegistrationResponse.username().get(0);
 
-        assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
-        assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
-
+            assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
+            assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
+        });
     }
 
 }

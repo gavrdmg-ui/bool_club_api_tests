@@ -50,12 +50,14 @@ public class UpdateUserTests extends TestBase {
                 .then()
                 .spec(successfulUpdateResponseSpec).extract().as(SuccessfulUpdateResponseModel.class));
 
-        assertThat(updateResponse.id()).isGreaterThan(0);
-        assertThat(updateResponse.username()).isEqualTo(BaseTestData.username);
-        assertThat(updateResponse.firstName()).isEqualTo(testData.firstName);
-        assertThat(updateResponse.lastName()).isEqualTo(testData.lastName);
-        assertThat(updateResponse.email()).isEqualTo(testData.email);
-        assertThat(updateResponse.remoteAddr()).matches(BaseTestData.ipAddrRegexp);
+        step("Проверка корректности новых данных", () -> {
+            assertThat(updateResponse.id()).isGreaterThan(0);
+            assertThat(updateResponse.username()).isEqualTo(BaseTestData.username);
+            assertThat(updateResponse.firstName()).isEqualTo(testData.firstName);
+            assertThat(updateResponse.lastName()).isEqualTo(testData.lastName);
+            assertThat(updateResponse.email()).isEqualTo(testData.email);
+            assertThat(updateResponse.remoteAddr()).matches(BaseTestData.ipAddrRegexp);
+        });
     }
 
     @Test
@@ -70,6 +72,8 @@ public class UpdateUserTests extends TestBase {
                 .then()
                 .spec(updateWithoutAuthTokenResponseSpec).extract().as(UpdateWithoutAuthTokenResponseModel.class));
 
-        assertThat(updateResponse.detail()).isEqualTo(UpdateTestData.expectedDetailErrorWithoutAuthToken);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            assertThat(updateResponse.detail()).isEqualTo(UpdateTestData.expectedDetailErrorWithoutAuthToken);
+        });
     }
 }

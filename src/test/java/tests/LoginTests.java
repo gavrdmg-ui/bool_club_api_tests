@@ -24,12 +24,14 @@ public class LoginTests extends TestBase {
                 given(loginRequestSpec).body(loginData).when().post("/auth/token/").then().spec(successfulLoginResponseSpec).extract().as(SuccessfulLoginResponseModel.class));
 
 
-        String actualAccess = loginResponse.access();
-        String actualRefresh = loginResponse.refresh();
+        step("Проверка наличия токенов в теле ответа", () -> {
+            String actualAccess = loginResponse.access();
+            String actualRefresh = loginResponse.refresh();
 
-        assertThat(actualAccess).startsWith(LoginTestData.expectedTokenPath);
-        assertThat(actualRefresh).startsWith(LoginTestData.expectedTokenPath);
-        assertThat(actualAccess).isNotEqualTo(actualRefresh);
+            assertThat(actualAccess).startsWith(LoginTestData.expectedTokenPath);
+            assertThat(actualRefresh).startsWith(LoginTestData.expectedTokenPath);
+            assertThat(actualAccess).isNotEqualTo(actualRefresh);
+        });
     }
 
     @Test
@@ -44,9 +46,11 @@ public class LoginTests extends TestBase {
                         .then()
                         .spec(wrongCredentialsLoginResponseSpec).extract().as(WrongCredentialsLoginResponseModel.class));
 
-        String actualDetailError = loginResponse.detail();
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String actualDetailError = loginResponse.detail();
 
-        assertThat(actualDetailError).isEqualTo(LoginTestData.expectedDetailErrorWrongCredentials);
+            assertThat(actualDetailError).isEqualTo(LoginTestData.expectedDetailErrorWrongCredentials);
+        });
     }
 
     @Test
@@ -58,11 +62,13 @@ public class LoginTests extends TestBase {
                 .then()
                 .spec(loginWithoutCredentialsResponseSpec).extract().as(LoginWithoutOrBlankCredentialsResponseModel.class));
 
-        String usernameActualDetailError = loginResponse.username().get(0);
-        String passwordActualDetailError = loginResponse.password().get(0);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String usernameActualDetailError = loginResponse.username().get(0);
+            String passwordActualDetailError = loginResponse.password().get(0);
 
-        assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
-        assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
+            assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
+            assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedRequiredError);
+        });
     }
 
     @Test
@@ -76,11 +82,13 @@ public class LoginTests extends TestBase {
                 .then()
                 .spec(loginWithoutCredentialsResponseSpec).extract().as(LoginWithoutOrBlankCredentialsResponseModel.class));
 
-        String usernameActualDetailError = loginResponse.username().get(0);
-        String passwordActualDetailError = loginResponse.password().get(0);
+        step("Проверка текста ошибки в теле ответа", () -> {
+            String usernameActualDetailError = loginResponse.username().get(0);
+            String passwordActualDetailError = loginResponse.password().get(0);
 
-        assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
-        assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+            assertThat(usernameActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+            assertThat(passwordActualDetailError).isEqualTo(BaseTestData.expectedBlankError);
+        });
     }
 
 }
