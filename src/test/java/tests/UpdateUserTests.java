@@ -11,11 +11,7 @@ import testdata.BaseTestData;
 import testdata.UpdateTestData;
 
 import static io.qameta.allure.Allure.step;
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static specs.login.LoginSpec.loginRequestSpec;
-import static specs.login.LoginSpec.successfulLoginResponseSpec;
-import static specs.update.UpdateSpec.*;
 
 public class UpdateUserTests extends TestBase {
 
@@ -31,24 +27,12 @@ public class UpdateUserTests extends TestBase {
 
         LoginBodyModel loginData = new LoginBodyModel(BaseTestData.username, BaseTestData.password);
 
-        SuccessfulLoginResponseModel loginResponse = step("Авторизация под пользователем для получения токена", () -> given(loginRequestSpec)
-                .body(loginData)
-                .when()
-                .post("/auth/token/")
-                .then()
-                .spec(successfulLoginResponseSpec).extract().as(SuccessfulLoginResponseModel.class));
+        SuccessfulLoginResponseModel loginResponse = api.auth.login(loginData);
 
         String actualAccess = loginResponse.access();
         UpdateBodyModel updateData = new UpdateBodyModel(BaseTestData.username, testData.firstName, testData.lastName, testData.email);
 
-        SuccessfulUpdateResponseModel updateResponse = step("Обновление информации о пользователе и проверка кода 200", () -> given(updateRequestSpec)
-                .auth()
-                .oauth2(actualAccess)
-                .body(updateData)
-                .when()
-                .put("/users/me/")
-                .then()
-                .spec(successfulUpdateResponseSpec).extract().as(SuccessfulUpdateResponseModel.class));
+        SuccessfulUpdateResponseModel updateResponse = api.users.update(updateData,actualAccess);
 
         step("Проверка корректности новых данных", () -> {
             assertThat(updateResponse.id()).isGreaterThan(0);
@@ -65,12 +49,7 @@ public class UpdateUserTests extends TestBase {
 
         UpdateBodyModel updateData = new UpdateBodyModel(BaseTestData.username, testData.firstName, testData.lastName, testData.email);
 
-        UpdateWithoutAuthTokenResponseModel updateResponse = step("Обновление информации о пользователе без токена автризации и проверка кода 401", () -> given(updateRequestSpec)
-                .body(updateData)
-                .when()
-                .put("/users/me/")
-                .then()
-                .spec(updateWithoutAuthTokenResponseSpec).extract().as(UpdateWithoutAuthTokenResponseModel.class));
+        UpdateWithoutAuthTokenResponseModel updateResponse = api.users.updateWithoutAutToken(updateData);
 
         step("Проверка текста ошибки в теле ответа", () -> {
             assertThat(updateResponse.detail()).isEqualTo(UpdateTestData.expectedDetailErrorWithoutAuthToken);

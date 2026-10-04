@@ -7,10 +7,7 @@ import testdata.BaseTestData;
 import testdata.RegistrationTestData;
 
 import static io.qameta.allure.Allure.step;
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static specs.registration.RegistrationSpec.*;
-
 
 public class RegistrationTests extends TestBase {
 
@@ -25,15 +22,7 @@ public class RegistrationTests extends TestBase {
     public void successfulRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
-        SuccessfulRegistrationResponseModel registrationResponse = step("Регистрация нового пользвотеля и проверка ответа 201", () -> given()
-                .spec(registrationRequestSpec)
-                .body(registrationData)
-                .when()
-                .post("/users/register/")
-                .then()
-                .spec(successfulRegistrationResponseSpec)
-                .extract()
-                .as(SuccessfulRegistrationResponseModel.class));
+        SuccessfulRegistrationResponseModel registrationResponse = api.users.register(registrationData);
 
         step("Проверка данных пользователя после успешной регистарции", () -> {
             assertThat(registrationResponse.id()).isGreaterThan(0);
@@ -49,27 +38,11 @@ public class RegistrationTests extends TestBase {
     public void existingUserWrongRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
-        SuccessfulRegistrationResponseModel firstRegistrationResponse = step("Регистрация нового пользвотеля и проверка ответа 201", () -> given()
-                .spec(registrationRequestSpec)
-                .body(registrationData)
-                .when()
-                .post("/users/register/")
-                .then()
-                .spec(successfulRegistrationResponseSpec)
-                .extract()
-                .as(SuccessfulRegistrationResponseModel.class));
+        SuccessfulRegistrationResponseModel firstRegistrationResponse = api.users.register(registrationData);
 
         assertThat(firstRegistrationResponse.username()).isEqualTo(testData.username);
 
-        ExistingUserResponseModel secondRegistrationResponse = step("Регистрация пользвотеля повторно и проверка ответа 400", () -> given()
-                .spec(registrationRequestSpec)
-                .body(registrationData)
-                .when()
-                .post("/users/register/")
-                .then()
-                .spec(existingUserRegistrationResponseSpec)
-                .extract()
-                .as(ExistingUserResponseModel.class));
+        ExistingUserResponseModel secondRegistrationResponse = api.users.registerExistUser(registrationData);
 
         step("Проверка текста ошибки в теле ответа", () -> {
             String actualError = secondRegistrationResponse.username().get(0);
@@ -81,15 +54,7 @@ public class RegistrationTests extends TestBase {
     public void registrationWithBlankFieldsTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel("", "");
 
-        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = step("Регистрация пользвотеля с пустыми полями в теле запроса и проверка ответа 400", () -> given()
-                .spec(registrationRequestSpec)
-                .body(registrationData)
-                .when()
-                .post("/users/register/")
-                .then()
-                .spec(blankFieldsRegistrationResponseSpec)
-                .extract()
-                .as(RegistrationWithoutOrBlankFieldsResponseModel.class));
+        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = api.users.registerWithBlankFields(registrationData);
 
         step("Проверка текста ошибки в теле ответа", () -> {
             String usernameActualDetailError = secondRegistrationResponse.username().get(0);
@@ -104,15 +69,8 @@ public class RegistrationTests extends TestBase {
     @Test
     public void registrationWithoutFieldsTest() {
 
-        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = step("Регистрация пользвотеля с пустым телом запроса и проверка ответа 400", () -> given()
-                .spec(registrationRequestSpec)
-                .body("{}")
-                .when()
-                .post("/users/register/")
-                .then()
-                .spec(blankFieldsRegistrationResponseSpec)
-                .extract()
-                .as(RegistrationWithoutOrBlankFieldsResponseModel.class));
+        RegistrationWithoutOrBlankFieldsResponseModel secondRegistrationResponse = api.users.registerWithBlankFields();
+
 
         step("Проверка текста ошибки в теле ответа", () -> {
             String usernameActualDetailError = secondRegistrationResponse.username().get(0);

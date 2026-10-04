@@ -9,10 +9,7 @@ import testdata.BaseTestData;
 import testdata.LoginTestData;
 
 import static io.qameta.allure.Allure.step;
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static specs.login.LoginSpec.*;
-
 public class LoginTests extends TestBase {
 
 
@@ -20,9 +17,7 @@ public class LoginTests extends TestBase {
     public void successfulLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(BaseTestData.username, BaseTestData.password);
 
-        SuccessfulLoginResponseModel loginResponse = step("Отправка запроса login для существующего пользователя и проверка ответа 200", () ->
-                given(loginRequestSpec).body(loginData).when().post("/auth/token/").then().spec(successfulLoginResponseSpec).extract().as(SuccessfulLoginResponseModel.class));
-
+        SuccessfulLoginResponseModel loginResponse = api.auth.login(loginData);
 
         step("Проверка наличия токенов в теле ответа", () -> {
             String actualAccess = loginResponse.access();
@@ -38,13 +33,7 @@ public class LoginTests extends TestBase {
     public void wrongCredentialsLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(BaseTestData.username, LoginTestData.wrongPassword);
 
-        WrongCredentialsLoginResponseModel loginResponse = step("Отправка запроса login с неправильным паролем и проверка ответа 401", () ->
-                given(loginRequestSpec)
-                        .body(loginData)
-                        .when()
-                        .post("/auth/token/")
-                        .then()
-                        .spec(wrongCredentialsLoginResponseSpec).extract().as(WrongCredentialsLoginResponseModel.class));
+        WrongCredentialsLoginResponseModel loginResponse = api.auth.loginWithWrongCredentials(loginData);
 
         step("Проверка текста ошибки в теле ответа", () -> {
             String actualDetailError = loginResponse.detail();
@@ -55,12 +44,7 @@ public class LoginTests extends TestBase {
 
     @Test
     public void loginWithoutCredentialsTest() {
-        LoginWithoutOrBlankCredentialsResponseModel loginResponse = step("Отправка запроса login с пустым телом проверка ответа 400", () -> given(loginRequestSpec)
-                .body("{}")
-                .when()
-                .post("/auth/token/")
-                .then()
-                .spec(loginWithoutCredentialsResponseSpec).extract().as(LoginWithoutOrBlankCredentialsResponseModel.class));
+        LoginWithoutOrBlankCredentialsResponseModel loginResponse = api.auth.loginWithoutOrBlankCredentials();
 
         step("Проверка текста ошибки в теле ответа", () -> {
             String usernameActualDetailError = loginResponse.username().get(0);
@@ -75,12 +59,7 @@ public class LoginTests extends TestBase {
     public void loginWithBlankCredentialsTest() {
         LoginBodyModel loginData = new LoginBodyModel("", "");
 
-        LoginWithoutOrBlankCredentialsResponseModel loginResponse = step("Отправка запроса login с пустыми поля в теле запроса проверка ответа 400", () -> given(loginRequestSpec)
-                .body(loginData)
-                .when()
-                .post("/auth/token/")
-                .then()
-                .spec(loginWithoutCredentialsResponseSpec).extract().as(LoginWithoutOrBlankCredentialsResponseModel.class));
+        LoginWithoutOrBlankCredentialsResponseModel loginResponse = api.auth.loginWithoutOrBlankCredentials(loginData);
 
         step("Проверка текста ошибки в теле ответа", () -> {
             String usernameActualDetailError = loginResponse.username().get(0);
