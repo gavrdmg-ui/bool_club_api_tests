@@ -4,7 +4,7 @@ import models.login.LoginBodyModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.update.SuccessfulUpdateResponseModel;
 import models.update.UpdateBodyModel;
-import models.update.UpdateWithoutAuthTokenResponseModel;
+import models.WithoutAuthTokenResponseModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import testdata.BaseTestData;
@@ -32,7 +32,7 @@ public class UpdateUserTests extends TestBase {
         String actualAccess = loginResponse.access();
         UpdateBodyModel updateData = new UpdateBodyModel(BaseTestData.username, testData.firstName, testData.lastName, testData.email);
 
-        SuccessfulUpdateResponseModel updateResponse = api.users.update(updateData,actualAccess);
+        SuccessfulUpdateResponseModel updateResponse = api.users.update(updateData, actualAccess);
 
         step("Проверка корректности новых данных", () -> {
             assertThat(updateResponse.id()).isGreaterThan(0);
@@ -49,10 +49,10 @@ public class UpdateUserTests extends TestBase {
 
         UpdateBodyModel updateData = new UpdateBodyModel(BaseTestData.username, testData.firstName, testData.lastName, testData.email);
 
-        UpdateWithoutAuthTokenResponseModel updateResponse = api.users.updateWithoutAutToken(updateData);
+        WithoutAuthTokenResponseModel updateResponse = api.users.updateWithoutAutToken(updateData);
 
         step("Проверка текста ошибки в теле ответа", () -> {
-            assertThat(updateResponse.detail()).isEqualTo(UpdateTestData.expectedDetailErrorWithoutAuthToken);
+            assertThat(updateResponse.detail()).isEqualTo(BaseTestData.expectedDetailErrorWithoutAuthToken);
         });
     }
 }

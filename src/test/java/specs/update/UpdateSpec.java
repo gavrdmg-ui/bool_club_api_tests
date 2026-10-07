@@ -21,11 +21,4 @@ public class UpdateSpec {
             .expectBody("id", notNullValue())
             .build();
 
-    public static ResponseSpecification updateWithoutAuthTokenResponseSpec = new ResponseSpecBuilder()
-            .log(ALL)
-            .expectStatusCode(401)
-            .expectBody(matchesJsonSchemaInClasspath(
-                    "schemas/update/update_without_auth_token_response_schema.json"))
-            .expectBody("detail", notNullValue())
-            .build();
 }

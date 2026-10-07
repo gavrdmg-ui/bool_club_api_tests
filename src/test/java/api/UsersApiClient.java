@@ -7,15 +7,16 @@ import models.registration.RegistrationWithoutOrBlankFieldsResponseModel;
 import models.registration.SuccessfulRegistrationResponseModel;
 import models.update.SuccessfulUpdateResponseModel;
 import models.update.UpdateBodyModel;
-import models.update.UpdateWithoutAuthTokenResponseModel;
+import models.WithoutAuthTokenResponseModel;
 
 import static io.restassured.RestAssured.given;
+import static specs.BaseSpec.withoutAuthTokenResponseSpec;
 import static specs.registration.RegistrationSpec.*;
 import static specs.update.UpdateSpec.*;
 
 public class UsersApiClient {
     @Step("Регистрация пользователя")
-    public SuccessfulRegistrationResponseModel register(RegistrationBodyModel registrationData){
+    public SuccessfulRegistrationResponseModel register(RegistrationBodyModel registrationData) {
         return given()
                 .spec(registrationRequestSpec)
                 .body(registrationData)
@@ -26,8 +27,9 @@ public class UsersApiClient {
                 .extract()
                 .as(SuccessfulRegistrationResponseModel.class);
     }
+
     @Step("Повторная регистрация пользователя")
-    public ExistingUserResponseModel registerExistUser(RegistrationBodyModel registrationData){
+    public ExistingUserResponseModel registerExistUser(RegistrationBodyModel registrationData) {
         return given()
                 .spec(registrationRequestSpec)
                 .body(registrationData)
@@ -39,8 +41,9 @@ public class UsersApiClient {
                 .as(ExistingUserResponseModel.class);
 
     }
+
     @Step("Регистрация пользователя с пустыми полям")
-    public RegistrationWithoutOrBlankFieldsResponseModel registerWithBlankFields(RegistrationBodyModel registrationData){
+    public RegistrationWithoutOrBlankFieldsResponseModel registerWithBlankFields(RegistrationBodyModel registrationData) {
         return given()
                 .spec(registrationRequestSpec)
                 .body(registrationData)
@@ -51,8 +54,9 @@ public class UsersApiClient {
                 .extract()
                 .as(RegistrationWithoutOrBlankFieldsResponseModel.class);
     }
+
     @Step("Регистрация пользователя с пустым телом запроса")
-    public RegistrationWithoutOrBlankFieldsResponseModel registerWithBlankFields(){
+    public RegistrationWithoutOrBlankFieldsResponseModel registerWithBlankFields() {
         return given()
                 .spec(registrationRequestSpec)
                 .body("{}")
@@ -63,8 +67,9 @@ public class UsersApiClient {
                 .extract()
                 .as(RegistrationWithoutOrBlankFieldsResponseModel.class);
     }
+
     @Step("Обновление данных пользовтеля")
-    public SuccessfulUpdateResponseModel update (UpdateBodyModel updateData,String actualAccess){
+    public SuccessfulUpdateResponseModel update(UpdateBodyModel updateData, String actualAccess) {
         return given(updateRequestSpec)
                 .auth()
                 .oauth2(actualAccess)
@@ -74,12 +79,14 @@ public class UsersApiClient {
                 .then()
                 .spec(successfulUpdateResponseSpec).extract().as(SuccessfulUpdateResponseModel.class);
     }
-    public UpdateWithoutAuthTokenResponseModel updateWithoutAutToken(UpdateBodyModel updateData){
+
+    @Step("Обновление данных пользовтеля без токена авторизации")
+    public WithoutAuthTokenResponseModel updateWithoutAutToken(UpdateBodyModel updateData) {
         return given(updateRequestSpec)
                 .body(updateData)
                 .when()
                 .put("/users/me/")
                 .then()
-                .spec(updateWithoutAuthTokenResponseSpec).extract().as(UpdateWithoutAuthTokenResponseModel.class);
+                .spec(withoutAuthTokenResponseSpec).extract().as(WithoutAuthTokenResponseModel.class);
     }
 }
