@@ -6,12 +6,11 @@ import io.restassured.specification.ResponseSpecification;
 
 import static io.restassured.filter.log.LogDetail.ALL;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static specs.BaseSpec.baseRequestSpec;
 
 public class ReviewsSpec {
-    public static RequestSpecification clubsRequestSpec = baseRequestSpec;
+    public static RequestSpecification reviewRequestSpec = baseRequestSpec;
 
     public static ResponseSpecification successfulReviewsListResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
