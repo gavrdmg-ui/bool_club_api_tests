@@ -29,7 +29,7 @@ public class ClubsApiClient {
     public Response getClubsById(int clubId, ResponseSpecification spec) {
         return given(clubsRequestSpec)
                 .when()
-                .get("/clubs/{id}/",clubId)
+                .get("/clubs/{id}/", clubId)
                 .then()
                 .spec(spec)
                 .extract()
@@ -37,9 +37,8 @@ public class ClubsApiClient {
     }
 
 
-
     @Step("Создание нового клуба")
-    public ClubModel createClub(CreateClubBodyModel requestBody,String actualAccess){
+    public ClubModel createClub(CreateClubBodyModel requestBody, String actualAccess) {
         return given(clubsRequestSpec)
                 .auth()
                 .oauth2(actualAccess)
@@ -51,8 +50,9 @@ public class ClubsApiClient {
                 .extract()
                 .as(ClubModel.class);
     }
+
     @Step("Создание нового клуба без авторизации")
-    public WithoutAuthTokenResponseModel createClub(CreateClubBodyModel requestBody){
+    public WithoutAuthTokenResponseModel createClub(CreateClubBodyModel requestBody) {
         return given(clubsRequestSpec)
                 .body(requestBody)
                 .when()
@@ -64,25 +64,26 @@ public class ClubsApiClient {
     }
 
     @Step("Обновление клуба")
-    public ClubModel updateclub(CreateClubBodyModel requestBody, String actualAccess, int clubId){
+    public ClubModel updateclub(CreateClubBodyModel requestBody, String actualAccess, int clubId) {
         return given(clubsRequestSpec)
                 .auth()
                 .oauth2(actualAccess)
                 .body(requestBody)
                 .when()
-                .put("/clubs/{id}/",clubId)
+                .put("/clubs/{id}/", clubId)
                 .then()
                 .spec(successfulClubResponseSpec)
                 .extract()
                 .as(ClubModel.class);
     }
+
     @Step("Удаление клуба")
-    public void deleteClub (int clubId, String actualAccess){
+    public void deleteClub(int clubId, String actualAccess) {
         given(clubsRequestSpec)
                 .auth()
                 .oauth2(actualAccess)
                 .when()
-                .delete("/clubs/{id}/",clubId)
+                .delete("/clubs/{id}/", clubId)
                 .then()
                 .spec(successfulDeleteResponseSpec);
     }

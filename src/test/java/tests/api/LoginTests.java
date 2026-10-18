@@ -10,6 +10,7 @@ import testdata.LoginTestData;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
+
 public class LoginTests extends TestBase {
 
 

@@ -140,7 +140,7 @@ public class ReviewsTests extends TestBase {
                 reviewsTestData.newAssessment,
                 reviewsTestData.newReadPages);
 
-        ReviewsResults updateReviewResponse = api.review.patchReview(createReviewResponse.id(),updateRequestBody, actualAccess);
+        ReviewsResults updateReviewResponse = api.review.patchReview(createReviewResponse.id(), updateRequestBody, actualAccess);
 
         step("Проверяем что поля отзыва обновлены", () -> {
             assertThat(updateReviewResponse.id()).isNotNull();
@@ -179,7 +179,6 @@ public class ReviewsTests extends TestBase {
         ReviewsResults createReviewResponse = api.review.postReview(createRequestBody, actualAccessUserOne);
 
 
-
         CreateReviewBodyModel updateRequestBody = new CreateReviewBodyModel(clubResponse.id(),
                 reviewsTestData.newReviewData,
                 reviewsTestData.newAssessment,
@@ -191,7 +190,7 @@ public class ReviewsTests extends TestBase {
 
         String actualAccessUserTwo = loginResponseUserTwo.access();
 
-        Response updateReviewResponse = api.review.patchReview(createReviewResponse.id(),updateRequestBody, actualAccessUserTwo,noPermissionResponseSpec);
+        Response updateReviewResponse = api.review.patchReview(createReviewResponse.id(), updateRequestBody, actualAccessUserTwo, noPermissionResponseSpec);
 
         step("Проверяем что поля отзыва обновлены", () -> {
             assertThat(updateReviewResponse.path("detail").toString()).isEqualTo(noPermissionError);
@@ -261,7 +260,7 @@ public class ReviewsTests extends TestBase {
 
         String actualAccessUserTwo = loginResponseUserTwo.access();
 
-        Response deleteResponse = api.review.deleteReview(reviewResponse.id(), actualAccessUserTwo,noPermissionResponseSpec);
+        Response deleteResponse = api.review.deleteReview(reviewResponse.id(), actualAccessUserTwo, noPermissionResponseSpec);
 
         step("Проверяем удаление чужого отзыва запрещено", () -> {
             assertThat(deleteResponse.path("detail").toString()).isEqualTo(noPermissionError);

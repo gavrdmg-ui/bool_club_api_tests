@@ -14,18 +14,19 @@ import static specs.reviews.ReviewsSpec.*;
 
 public class ReviewsApiClient {
     @Step("Получение ревью по конкретному клубу")
-    public ReviewsModel getReviews(Integer clubId){
+    public ReviewsModel getReviews(Integer clubId) {
         return given(clubsRequestSpec)
                 .when()
-                .queryParam("club",clubId)
+                .queryParam("club", clubId)
                 .get("/clubs/reviews/")
                 .then()
                 .spec(successfulReviewsListResponseSpec)
                 .extract()
                 .as(ReviewsModel.class);
     }
+
     @Step("Получение всех ревью")
-    public ReviewsModel getReviews(){
+    public ReviewsModel getReviews() {
         return given(clubsRequestSpec)
                 .when()
                 .get("/clubs/reviews/")
@@ -36,22 +37,22 @@ public class ReviewsApiClient {
     }
 
     @Step("Получение ревью по id")
-    public Response getReview(Integer reviewId, ResponseSpecification spec){
+    public Response getReview(Integer reviewId, ResponseSpecification spec) {
         return given(clubsRequestSpec)
                 .when()
-                .get("/clubs/reviews/{id}/",reviewId)
+                .get("/clubs/reviews/{id}/", reviewId)
                 .then()
                 .spec(spec)
                 .extract()
                 .response();
     }
 
-    public Response getReviewById(){
+    public Response getReviewById() {
         return null;
     }
 
     @Step("Создание отзыва клуба")
-    public ReviewsResults postReview( CreateReviewBodyModel requestBody, String actualAccess){
+    public ReviewsResults postReview(CreateReviewBodyModel requestBody, String actualAccess) {
         return given(clubsRequestSpec)
                 .when()
                 .auth()
@@ -64,26 +65,26 @@ public class ReviewsApiClient {
                 .as(ReviewsResults.class);
     }
 
-    public ReviewsResults patchReview(Integer reviewId,CreateReviewBodyModel requestBody, String actualAccess){
+    public ReviewsResults patchReview(Integer reviewId, CreateReviewBodyModel requestBody, String actualAccess) {
         return given(clubsRequestSpec)
                 .when()
                 .auth()
                 .oauth2(actualAccess)
                 .body(requestBody)
-                .patch("/clubs/reviews/{id}/",reviewId)
+                .patch("/clubs/reviews/{id}/", reviewId)
                 .then()
                 .spec(successfulUpdateReviewResponseSpec)
                 .extract()
                 .as(ReviewsResults.class);
     }
 
-    public Response patchReview(Integer reviewId,CreateReviewBodyModel requestBody, String actualAccess,ResponseSpecification spec){
+    public Response patchReview(Integer reviewId, CreateReviewBodyModel requestBody, String actualAccess, ResponseSpecification spec) {
         return given(clubsRequestSpec)
                 .when()
                 .auth()
                 .oauth2(actualAccess)
                 .body(requestBody)
-                .patch("/clubs/reviews/{id}/",reviewId)
+                .patch("/clubs/reviews/{id}/", reviewId)
                 .then()
                 .spec(spec)
                 .extract()
@@ -91,23 +92,23 @@ public class ReviewsApiClient {
     }
 
     @Step("Удаление клуба")
-    public void deleteReview(int reviewId,String actualAccess){
-         given(clubsRequestSpec)
+    public void deleteReview(int reviewId, String actualAccess) {
+        given(clubsRequestSpec)
                 .auth()
                 .oauth2(actualAccess)
                 .when()
-                .delete("/clubs/reviews/{id}/",reviewId)
+                .delete("/clubs/reviews/{id}/", reviewId)
                 .then()
                 .spec(successfulDeleteResponseSpec);
     }
 
     @Step("Удаление клуба")
-    public Response deleteReview(int reviewId,String actualAccess,ResponseSpecification spec){
+    public Response deleteReview(int reviewId, String actualAccess, ResponseSpecification spec) {
         return given(clubsRequestSpec)
                 .auth()
                 .oauth2(actualAccess)
                 .when()
-                .delete("/clubs/reviews/{id}/",reviewId)
+                .delete("/clubs/reviews/{id}/", reviewId)
                 .then()
                 .spec(spec)
                 .extract()

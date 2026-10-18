@@ -12,6 +12,6 @@ public class BaseTestData {
             + "(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$";
     public static String expectedDetailErrorWithoutAuthToken = "Authentication credentials were not provided.";
     public static String dateRegex = "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:?\\d{2})$";
-    public static String noPermissionError="You do not have permission to perform this action.";
+    public static String noPermissionError = "You do not have permission to perform this action.";
 
 }
