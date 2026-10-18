@@ -43,14 +43,6 @@ public class ClubsSpec {
             .expectBody(matchesJsonSchemaInClasspath(
                     "schemas/clubs/successful_create_club_response_schema.json"))
             .build();
-    public static ResponseSpecification successfulDeleteClubResponseSpec = new ResponseSpecBuilder()
-            .log(ALL)
-            .expectStatusCode(204)
-            .build();
 
-    public static ResponseSpecification notFoundClubsResponseSpec = new ResponseSpecBuilder()
-            .log(ALL)
-            .expectStatusCode(404)
-            .expectBody("detail", notNullValue())
-            .build();
+
 }

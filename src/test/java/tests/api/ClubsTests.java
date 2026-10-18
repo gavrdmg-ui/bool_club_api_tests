@@ -1,4 +1,4 @@
-package tests;
+package tests.api;
 
 import io.restassured.response.Response;
 import models.WithoutAuthTokenResponseModel;
@@ -14,7 +14,7 @@ import testdata.ClubsTestData;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
-import static specs.clubs.ClubsSpec.notFoundClubsResponseSpec;
+import static specs.BaseSpec.notFoundResponseSpec;
 
 public class ClubsTests extends TestBase {
 
@@ -74,7 +74,7 @@ public class ClubsTests extends TestBase {
             assertThat(response.bookTitle()).isEqualTo(testData.bookTitle);
             assertThat(response.bookTitle()).isEqualTo(testData.bookTitle);
             assertThat(response.bookTitle()).isEqualTo(testData.bookTitle);
-            assertThat(response.created()).containsPattern(ClubsTestData.dateRegex);
+            assertThat(response.created()).containsPattern(BaseTestData.dateRegex);
             assertThat(response.modified()).isNull();
         });
     }
@@ -149,7 +149,7 @@ public class ClubsTests extends TestBase {
         step("Удаляем клуб", () -> api.clubs.deleteClub(clubId, actualAccess));
 
         step("Проверка что клуб удален", () -> {
-            Response response = api.clubs.getClubsById(clubId, notFoundClubsResponseSpec);
+            Response response = api.clubs.getClubsById(clubId, notFoundResponseSpec);
             assertThat(response.path("detail").toString()).isEqualTo(ClubsTestData.notFoundClubError);
         });
     }

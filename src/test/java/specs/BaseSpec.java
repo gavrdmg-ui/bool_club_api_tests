@@ -25,4 +25,14 @@ public class BaseSpec {
                     "schemas/without_auth_token_response_schema.json"))
             .expectBody("detail", notNullValue())
             .build();
+    public static ResponseSpecification notFoundResponseSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(404)
+            .expectBody("detail", notNullValue())
+            .build();
+    public static ResponseSpecification noPermissionResponseSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(403)
+            .expectBody("detail", notNullValue())
+            .build();
 }

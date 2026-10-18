@@ -1,4 +1,4 @@
-package tests;
+package tests.api;
 
 import models.registration.*;
 import org.junit.jupiter.api.BeforeEach;

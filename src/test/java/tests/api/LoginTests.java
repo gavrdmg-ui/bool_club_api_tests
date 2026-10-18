@@ -1,4 +1,4 @@
-package tests;
+package tests.api;
 
 import models.login.LoginBodyModel;
 import models.login.LoginWithoutOrBlankCredentialsResponseModel;

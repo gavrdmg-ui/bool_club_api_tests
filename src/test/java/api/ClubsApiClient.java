@@ -8,6 +8,7 @@ import models.clubs.ClubModel;
 import models.clubs.ClubsListResponseModel;
 import models.clubs.CreateClubBodyModel;
 
+import static api.ApiClient.successfulDeleteResponseSpec;
 import static io.restassured.RestAssured.given;
 import static specs.BaseSpec.withoutAuthTokenResponseSpec;
 import static specs.clubs.ClubsSpec.*;
@@ -83,6 +84,6 @@ public class ClubsApiClient {
                 .when()
                 .delete("/clubs/{id}/",clubId)
                 .then()
-                .spec(successfulDeleteClubResponseSpec);
+                .spec(successfulDeleteResponseSpec);
     }
 }
