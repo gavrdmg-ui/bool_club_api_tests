@@ -1,7 +1,5 @@
 package testdata;
 
-import net.datafaker.Faker;
-
 public class ReviewsTestData extends BaseTestData {
     public Integer clubWithReviewsId = 2;
     public Integer baseReviewsPaginationSize = 50;
@@ -16,4 +14,5 @@ public class ReviewsTestData extends BaseTestData {
     public String newReviewData = faker.book().title();
     public Integer newAssessment = faker.number().numberBetween(1, 5);
     public Integer newReadPages = faker.number().numberBetween(1, 300);
+    public static String emptyReviewMessage = "Пока нет отзывов. Будьте первым, кто поделится впечатлениями!";
 }

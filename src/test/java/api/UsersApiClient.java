@@ -89,4 +89,14 @@ public class UsersApiClient {
                 .then()
                 .spec(withoutAuthTokenResponseSpec).extract().as(WithoutAuthTokenResponseModel.class);
     }
+
+    public SuccessfulUpdateResponseModel getUserInfo(String actualAccess) {
+        return given(updateRequestSpec)
+                .auth()
+                .oauth2(actualAccess)
+                .when()
+                .get("/users/me/")
+                .then()
+                .spec(successfulUpdateResponseSpec).extract().as(SuccessfulUpdateResponseModel.class);
+    }
 }
