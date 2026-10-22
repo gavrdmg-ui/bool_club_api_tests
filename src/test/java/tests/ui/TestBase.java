@@ -2,6 +2,7 @@ package tests.ui;
 
 import api.ApiClient;
 import com.codeborne.selenide.Configuration;
+import helpers.Attach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -50,6 +51,11 @@ public class TestBase {
 
     @AfterEach
     void tearDown() {
+        Attach.screenshotAs("Last screenshot");
+        Attach.pageSource();
+        Attach.attachAsText("Some file", "Some content");
+        Attach.browserConsoleLogs();
+        Attach.addVideo();
         closeWebDriver();
     }
 }
