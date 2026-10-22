@@ -61,10 +61,10 @@ public class ReviewsTests extends TestBase {
             assertThat(reviewResponse.id()).isNotNull();
             assertThat(reviewResponse.club()).isEqualTo(clubResponse.id());
             assertThat(reviewResponse.user().username()).isEqualTo(BaseTestData.username);
-            assertThat(reviewResponse.review()).isEqualTo(reviewsTestData.newReviewData);
-            assertThat(reviewResponse.assessment()).isEqualTo(reviewsTestData.newAssessment);
-            assertThat(reviewResponse.readPages()).isEqualTo(reviewsTestData.newReadPages);
-            AbstractStringAssert<?> o = assertThat(reviewResponse.created()).containsPattern(dateRegex);
+            assertThat(reviewResponse.review()).isEqualTo(reviewsTestData.reviewData);
+            assertThat(reviewResponse.assessment()).isEqualTo(reviewsTestData.assessment);
+            assertThat(reviewResponse.readPages()).isEqualTo(reviewsTestData.readPages);
+            assertThat(reviewResponse.created()).containsPattern(dateRegex);
             assertThat(reviewResponse.modified()).isNull();
         });
     }
@@ -85,7 +85,7 @@ public class ReviewsTests extends TestBase {
         ReviewsModel response = api.review.getReviews();
 
         step("Проверка количества ревью на странице", () -> {
-            assertThat(response.count()).isEqualTo(reviewsTestData.baseReviewsPaginationSize);
+            assertThat(response.results().size()).isEqualTo(reviewsTestData.baseReviewsPaginationSize);
         });
 
         step("Проверка наличия пагинации на странице", () -> {
